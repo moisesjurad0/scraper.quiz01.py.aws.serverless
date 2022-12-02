@@ -1,14 +1,10 @@
 import json
-import logging
-import boto3
-import os
 import uuid
+import app
 
-dynamodb = boto3.resource('dynamodb')
-table_name = os.environ.get('QUESTIONS_TABLE')
-
-logger = logging.getLogger('exam-api')
-logger.setLevel(logging.INFO)
+logger = app.logger
+dynamodb = app.dynamodb
+table_name = app.table_name
 
 def lambda_handler(event, context):
     
@@ -19,9 +15,13 @@ def lambda_handler(event, context):
     
     table = dynamodb.Table(table_name)
     response = table.put_item(TableName=table_name, Item=question)
-    print(response)
+    
+    logger.info(f'response->{response}')    
+    
     return{
         'statusCode': 201,
         'headers': {},
-        'body': json.dumps({'message': 'Question-Answer Created'})
+        'body': json.dumps({
+            'message': 'Question-Answer Created',
+            'id': question['id']})
     }
