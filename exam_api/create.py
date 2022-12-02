@@ -11,7 +11,7 @@ def lambda_handler(event, context):
     logger.info(f'event->{event}')
     
     question = json.loads(event['body'])        
-    question['id'] = str(uuid.uuid4())
+    question['id'] = uuid.uuid4().hex
     
     table = dynamodb.Table(table_name)
     response = table.put_item(TableName=table_name, Item=question)
