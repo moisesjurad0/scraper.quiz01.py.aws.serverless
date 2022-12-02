@@ -1,16 +1,12 @@
 import json
-import logging
-import os
 
-import boto3
 import simplejson as json
 from boto3.dynamodb.conditions import Key, Attr
+import app
 
-dynamodb = boto3.resource('dynamodb')
-table_name = os.environ.get('QUESTIONS_TABLE')
-
-logger = logging.getLogger('exam-api')
-logger.setLevel(logging.INFO)
+logger = app.logger
+dynamodb = app.dynamodb
+table_name = app.table_name
 
 def lambda_handler(event, context):
     
@@ -23,8 +19,10 @@ def lambda_handler(event, context):
     response=None
     if question["id"] is not None:
         response = table.query(KeyConditionExpression=Key('id').eq(question["id"]))
+        logger.info(f'response->{response}')
     if question["text"] is not None:
         response = table.scan(FilterExpression=Attr('question').contains(question["text"]) or Attr('answer').contains(question["text"]))
+        logger.info(f'response->{response}')
 
     return{
         'statusCode': 200,

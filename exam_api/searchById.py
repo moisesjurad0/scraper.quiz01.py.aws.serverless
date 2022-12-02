@@ -1,23 +1,22 @@
-import logging
 import simplejson as json
-import boto3
-import os
 from boto3.dynamodb.conditions import Key
+import app
 
-dynamodb = boto3.resource('dynamodb')
-table_name = os.environ.get('QUESTIONS_TABLE')
+logger = app.logger
+dynamodb = app.dynamodb
+table_name = app.table_name
 
-logger = logging.getLogger('exam-api')
-logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    
+
     logger.info(f'event->{event}')
-    
-    
+
     table = dynamodb.Table(table_name)
     question_id = int(event['pathParameters']['id'])
+
     response = table.query(KeyConditionExpression=Key('id').eq(question_id))
+
+    logger.info(f'response->{response}')
 
     return{
         'statusCode': 200,
