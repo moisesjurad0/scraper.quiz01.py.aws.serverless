@@ -63,8 +63,8 @@ Resources:
         SearchByTextQuestions:
           Type: Api
           Properties:            
-            Path: /questions
-            Method: GET
+            Path: /questions/search
+            Method: POST
             RestApiId: !Ref ExamAPI
             #Auth:
             #  ApiKeyRequired: true
