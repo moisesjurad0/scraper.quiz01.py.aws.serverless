@@ -22,10 +22,10 @@ def lambda_handler(event, context):
         logger.info(f'i->{i}')
         try:
             if request_json[i] is not None:
-                if i in ('id', 'UUID'):
+                if i in ('id'):
                     response = table.query(
                         KeyConditionExpression=Key(i).eq(request_json[i]))
-                elif i in ('question', 'answer'):
+                elif i in ('UUID', 'question', 'answer'):
                     response = table.scan(
                         FilterExpression=Attr(i).contains(request_json[i]))
                 elif i == 'text':
@@ -35,7 +35,7 @@ def lambda_handler(event, context):
             logger.info(f'response->{response}')
             break
         except KeyError as e:
-            logger.warning(e, exc_info=True) 
+            logger.warning(e, exc_info=True)
 
     return{
         'statusCode': 200,
