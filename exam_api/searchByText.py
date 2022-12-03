@@ -32,8 +32,8 @@ def lambda_handler(event, context):
                     response = table.scan(
                         FilterExpression=Attr('question').contains(request_json[i]) or
                         Attr('answer').contains(request_json[i]))
-            logger.info(f'response->{response}')
-            break
+                logger.info(f'response->{response}')
+                break
         except KeyError as e:
             logger.warning(e, exc_info=True)
 
