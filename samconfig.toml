@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "exam-api-stack"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-pvzezqxu89n"
+s3_prefix = "exam-api-stack"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+image_repositories = []
