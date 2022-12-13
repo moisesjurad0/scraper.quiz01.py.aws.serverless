@@ -71,6 +71,23 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref QuestionsTable
+  SearchQuestionByTextV2Function:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: exam_api/
+      Handler: searchByText.v2.lambda_handler
+      Events:
+        SearchByTextQuestions:
+          Type: Api
+          Properties:
+            Path: /questions/search/v2
+            Method: POST
+            RestApiId: !Ref ExamAPI
+            #Auth:
+            #  ApiKeyRequired: true
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref QuestionsTable
   ExamAPI:
     Type: AWS::Serverless::Api
     Properties:
