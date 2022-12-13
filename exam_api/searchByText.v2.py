@@ -1,29 +1,17 @@
-"""_summary_.
+import logging
+import os
 
-Returns:
-    _type_: _description_
-"""
-# import json
-
+import boto3
 import simplejson as json
-from boto3.dynamodb.conditions import Key, Attr
-import app
+from boto3.dynamodb.conditions import Attr
 
-logger = app.logger
-dynamodb = app.dynamodb
-table_name = app.table_name
+logger = logging.getLogger('exam-api')
+logger.setLevel(logging.INFO)
+dynamodb = boto3.resource('dynamodb')
+table_name = os.environ.get('QUESTIONS_TABLE')
 
 
 def lambda_handler(event, context):
-    """_summary_.
-
-    Args:
-        event (_type_): _description_
-        context (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
     logger.info(f'event->{event}')
 
     request_json = json.loads(event['body'])
@@ -31,34 +19,25 @@ def lambda_handler(event, context):
 
     response = None
 
-    for i in (
-        'id',
-        'uuid',
-        'question',
-        'question_type',
-        'answer',
-        'text',
-            'correct'):
-        logger.info(f'i->{i}')
-        try:
-            if request_json[i] is not None:
-                if i in ('id'):
-                    response = table.query(
-                        KeyConditionExpression=Key(i).eq(request_json[i]))
-                elif i in ('uuid', 'question', 'question_type', 'answer'):
-                    response = table.scan(
-                        FilterExpression=Attr(i).contains(request_json[i]))
-                elif i == 'text':
-                    response = table.scan(FilterExpression=(
-                        Attr('question').contains(request_json[i]) or
-                        Attr('answer').contains(request_json[i])))
-                elif i == 'correct':
-                    response = table.scan(
-                        FilterExpression=Attr(i).eq(request_json[i]))
-                logger.info(f'response->{response}')
-                break
-        except KeyError as e:
-            logger.warning(e, exc_info=True)
+    my_attribs = (
+        'question',  # string
+        'question_type',  # string
+        'answer',  # string
+        'correct'  # boolean
+    )
+
+    # try:
+    response = table.scan(
+        FilterExpression=(
+                Attr(my_attribs[0]).contains(request_json[my_attribs[0]]) and
+                Attr(my_attribs[1]).contains(request_json[my_attribs[1]]) and
+                Attr(my_attribs[2]).contains(request_json[my_attribs[2]]) and
+                Attr(my_attribs[3]).eq(request_json[my_attribs[3]])
+        )
+    )
+    logger.info(f'response->{response}')
+    # except KeyError as e:
+    # logger.warning(e, exc_info=True)
 
     return {
         'statusCode': 200,
