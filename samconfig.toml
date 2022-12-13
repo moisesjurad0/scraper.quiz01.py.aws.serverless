@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "exam02-api-stack"
+stack_name = "exam01-api-stack"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-pvzezqxu89n"
-s3_prefix = "exam02-api-stack"
+s3_prefix = "exam01-api-stack"
 region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 image_repositories = []
