@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  sam-app-exam-api-1
+  sam-app-exam02-api
 
 Globals:
   Function:
@@ -11,10 +11,10 @@ Globals:
     Timeout: 3
     Environment:
       Variables:
-        QUESTIONS_TABLE: !Ref QuestionsTable
+        API_TABLE: !Ref Exam02Table
 
 Resources:
-  QuestionsTable:
+  Exam02Table:
     Type: AWS::Serverless::SimpleTable
     Properties:
       PrimaryKey:
@@ -29,7 +29,7 @@ Resources:
         CreateQuestions:
           Type: Api
           Properties:
-            Path: /questions
+            Path: /exam02
             Method: POST
             RestApiId: !Ref ExamAPI
             #Auth:
@@ -46,7 +46,7 @@ Resources:
         SearchByIdQuestions:
           Type: Api
           Properties:
-            Path: /questions/{id}
+            Path: /exam02/{id}
             Method: GET
             RestApiId: !Ref ExamAPI
             #Auth:
@@ -63,7 +63,7 @@ Resources:
         SearchByTextQuestions:
           Type: Api
           Properties:            
-            Path: /questions/search
+            Path: /exam02/search
             Method: POST
             RestApiId: !Ref ExamAPI
             #Auth:
@@ -80,7 +80,7 @@ Resources:
         SearchByTextQuestions:
           Type: Api
           Properties:
-            Path: /questions/search/v2
+            Path: /exam02/search/v2
             Method: POST
             RestApiId: !Ref ExamAPI
             #Auth:
@@ -96,8 +96,8 @@ Resources:
         ApiKeyRequired: true # sets for all methods
 Outputs:
   CreateQuestionAPI:
-    Description: "API Gateway endpoint url for creating orders"
-    Value: !Sub "https://${ExamAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/questions"
+    Description: "API Gateway endpoint url for creating exam02 items"
+    Value: !Sub "https://${ExamAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/exam02"
   CreateQuestionFunction:
     Description: "Create Question function ARN"
     Value: !GetAtt CreateQuestionFunction.Arn

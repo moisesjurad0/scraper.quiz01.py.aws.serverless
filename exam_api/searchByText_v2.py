@@ -8,7 +8,7 @@ from boto3.dynamodb.conditions import Attr
 logger = logging.getLogger('exam-api')
 logger.setLevel(logging.INFO)
 dynamodb = boto3.resource('dynamodb')
-table_name = os.environ.get('QUESTIONS_TABLE')
+table_name = os.environ.get('API_TABLE')
 
 
 def lambda_handler(event, context):
