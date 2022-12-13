@@ -14,10 +14,8 @@ table_name = os.environ.get('QUESTIONS_TABLE')
 def lambda_handler(event, context):
     logger.info(f'event->{event}')
 
-    request_json = json.loads(event['body'])
+    request = json.loads(event['body'])
     table = dynamodb.Table(table_name)
-
-    response = None
 
     my_attribs = (
         'question',  # string
@@ -26,18 +24,18 @@ def lambda_handler(event, context):
         'correct'  # boolean
     )
 
-    # try:
+    # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/dynamodb.html#querying-and-scanning
+    # You are also able to chain conditions together using the logical operators: & (and), | (or), and ~ (not).
+    # For example, this scans for all users whose first_name starts with J and whose account_type is super_user:
     response = table.scan(
         FilterExpression=(
-                Attr(my_attribs[0]).contains(request_json[my_attribs[0]]) and
-                Attr(my_attribs[1]).contains(request_json[my_attribs[1]]) and
-                Attr(my_attribs[2]).contains(request_json[my_attribs[2]]) and
-                Attr(my_attribs[3]).eq(request_json[my_attribs[3]])
+                Attr(my_attribs[0]).contains(request[my_attribs[0]]) &
+                Attr(my_attribs[1]).contains(request[my_attribs[1]]) &
+                Attr(my_attribs[2]).contains(request[my_attribs[2]]) &
+                Attr(my_attribs[3]).eq(request[my_attribs[3]])
         )
     )
     logger.info(f'response->{response}')
-    # except KeyError as e:
-    # logger.warning(e, exc_info=True)
 
     return {
         'statusCode': 200,
