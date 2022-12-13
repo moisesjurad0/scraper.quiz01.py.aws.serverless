@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  sam-app-exam02-api
+  sam-app-exam01-api
 
 Globals:
   Function:
@@ -11,10 +11,10 @@ Globals:
     Timeout: 3
     Environment:
       Variables:
-        API_TABLE: !Ref Exam02Table
+        API_TABLE: !Ref Exam01Table
 
 Resources:
-  Exam02Table:
+  Exam01Table:
     Type: AWS::Serverless::SimpleTable
     Properties:
       PrimaryKey:
@@ -29,14 +29,14 @@ Resources:
         CreateQuestions:
           Type: Api
           Properties:
-            Path: /exam02
+            Path: /exam01
             Method: POST
             RestApiId: !Ref ExamAPI
             #Auth:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !Ref Exam02Table
+            TableName: !Ref Exam01Table
   SearchQuestionByIdFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -46,14 +46,14 @@ Resources:
         SearchByIdQuestions:
           Type: Api
           Properties:
-            Path: /exam02/{id}
+            Path: /exam01/{id}
             Method: GET
             RestApiId: !Ref ExamAPI
             #Auth:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref Exam02Table
+            TableName: !Ref Exam01Table
   SearchQuestionByTextFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -63,14 +63,14 @@ Resources:
         SearchByTextQuestions:
           Type: Api
           Properties:            
-            Path: /exam02/search
+            Path: /exam01/search
             Method: POST
             RestApiId: !Ref ExamAPI
             #Auth:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref Exam02Table
+            TableName: !Ref Exam01Table
   SearchQuestionByTextV2Function:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -80,14 +80,14 @@ Resources:
         SearchByTextQuestions:
           Type: Api
           Properties:
-            Path: /exam02/search/v2
+            Path: /exam01/search/v2
             Method: POST
             RestApiId: !Ref ExamAPI
             #Auth:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref Exam02Table
+            TableName: !Ref Exam01Table
   ExamAPI:
     Type: AWS::Serverless::Api
     Properties:
@@ -96,8 +96,8 @@ Resources:
         ApiKeyRequired: true # sets for all methods
 Outputs:
   CreateQuestionAPI:
-    Description: "API Gateway endpoint url for creating exam02 items"
-    Value: !Sub "https://${ExamAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/exam02"
+    Description: "API Gateway endpoint url for creating exam01 items"
+    Value: !Sub "https://${ExamAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/exam01"
   CreateQuestionFunction:
     Description: "Create Question function ARN"
     Value: !GetAtt CreateQuestionFunction.Arn
