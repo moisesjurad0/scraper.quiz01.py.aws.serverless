@@ -36,7 +36,7 @@ Resources:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !Ref QuestionsTable
+            TableName: !Ref Exam02Table
   SearchQuestionByIdFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -53,7 +53,7 @@ Resources:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref QuestionsTable
+            TableName: !Ref Exam02Table
   SearchQuestionByTextFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -70,7 +70,7 @@ Resources:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref QuestionsTable
+            TableName: !Ref Exam02Table
   SearchQuestionByTextV2Function:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -87,7 +87,7 @@ Resources:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref QuestionsTable
+            TableName: !Ref Exam02Table
   ExamAPI:
     Type: AWS::Serverless::Api
     Properties:
