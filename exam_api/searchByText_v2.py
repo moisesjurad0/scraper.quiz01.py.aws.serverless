@@ -21,6 +21,7 @@ def lambda_handler(event, context):
         'question',  # string
         'question_type',  # string
         'answer',  # string
+        'exam_number',  # string
         'correct'  # boolean
     )
 
@@ -32,7 +33,8 @@ def lambda_handler(event, context):
                 Attr(my_attribs[0]).contains(request[my_attribs[0]]) &
                 Attr(my_attribs[1]).contains(request[my_attribs[1]]) &
                 Attr(my_attribs[2]).contains(request[my_attribs[2]]) &
-                Attr(my_attribs[3]).eq(request[my_attribs[3]])
+                Attr(my_attribs[3]).contains(request[my_attribs[3]]) &
+                Attr(my_attribs[4]).eq(request[my_attribs[4]])
         )
     )
     logger.info(f'response->{response}')
