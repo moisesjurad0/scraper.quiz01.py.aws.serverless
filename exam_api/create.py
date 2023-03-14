@@ -41,6 +41,6 @@ def lambda_handler(event, context):
         'statusCode': 201,
         'headers': {},
         'body': json.dumps({
-            'message': 'Question-Answer Created',
+            'message': 'Item Created',
             'id': question['id']})
     }
