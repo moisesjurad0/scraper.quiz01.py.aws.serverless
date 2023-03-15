@@ -102,7 +102,7 @@ Resources:
 Outputs:
   CreateQuestionAPI:
     Description: "API Gateway endpoint url for creating items"
-    Value: !Sub "https://${Quiz01API}.execute-api.${AWS::Region}.amazonaws.com/Prod/${WEB_PATH}"
+    Value: !Sub "https://${Quiz01API}.execute-api.${AWS::Region}.amazonaws.com/Prod/quiz01"
   CreateQuestionFunction:
     Description: "Create Question function ARN"
     Value: !GetAtt CreateQuestionFunction.Arn
