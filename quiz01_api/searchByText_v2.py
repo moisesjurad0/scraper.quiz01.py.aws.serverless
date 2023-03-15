@@ -3,17 +3,13 @@
 Returns:
     _type_: _description_
 """
-import logging
-import os
-
-import boto3
 import simplejson as json
 from boto3.dynamodb.conditions import Attr
+import app
 
-logger = logging.getLogger('exam-api')
-logger.setLevel(logging.INFO)
-dynamodb = boto3.resource('dynamodb')
-table_name = os.environ.get('API_TABLE')
+logger = app.logger
+dynamodb = app.dynamodb
+table_name = app.table_name
 
 
 def lambda_handler(event, context):
