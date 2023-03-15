@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  This is a SAM template to build the ServerLess API, TABLE, LAMBDAS, S3, STACK for the API quiz01-scrapper.
+  This is a SAM template to build the ServerLess API, TABLE, LAMBDAS, CLOUDFORMATION STACK, S3 for the API quiz01-scrapper.
 Globals:
   Function:
     Runtime: python3.9
