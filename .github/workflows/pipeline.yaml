@@ -56,6 +56,7 @@ jobs:
           path: packaged-prod.yaml
 
   deploy-prod:
+    needs: [build-and-package]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     # Configure GitHub Action Environment to have a manual approval step before deployment to production
