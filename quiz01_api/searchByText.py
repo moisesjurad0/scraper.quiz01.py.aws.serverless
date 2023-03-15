@@ -1,4 +1,4 @@
-"""_summary_.
+"""Modulo de busqueda por texto v1.
 
 Returns:
     _type_: _description_
@@ -15,7 +15,7 @@ table_name = app.table_name
 
 
 def lambda_handler(event, context):
-    """_summary_.
+    """Metodo de entrada.
 
     Args:
         event (_type_): _description_

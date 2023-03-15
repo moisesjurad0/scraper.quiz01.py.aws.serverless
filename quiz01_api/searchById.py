@@ -1,3 +1,8 @@
+"""Modulo de busqueda por id.
+
+Returns:
+    _type_: _description_
+"""
 import simplejson as json
 from boto3.dynamodb.conditions import Key
 import app
@@ -8,7 +13,15 @@ table_name = app.table_name
 
 
 def lambda_handler(event, context):
+    """Metodo de entrada.
 
+    Args:
+        event (_type_): _description_
+        context (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     logger.info(f'event->{event}')
 
     table = dynamodb.Table(table_name)

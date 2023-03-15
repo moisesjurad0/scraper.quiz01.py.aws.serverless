@@ -1,8 +1,7 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  sam-app-exam01-api
-
+  This is a SAM template to build the ServerLess API, TABLE, LAMBDAS, S3, STACK for the API quiz01-scrapper.
 Globals:
   Function:
     Runtime: python3.9
@@ -11,84 +10,90 @@ Globals:
     Timeout: 3
     Environment:
       Variables:
-        API_TABLE: !Ref Exam01Table
+        API_TABLE_PYSICAL_ID: !Ref Quiz01Table
+        # API_TABLE_LOGICAL_NAME: QUIZ01TABLE
+        APP_NAME: quiz01-scrapper
+        # API_LOGICAL_NAME: QUIZ01API
+        # FOLDER_PATH: quiz01_api
+        WEB_PATH: quiz01
 
 Resources:
-  Exam01Table:
+  Quiz01Table:
     Type: AWS::Serverless::SimpleTable
     Properties:
+      #TableName: QUIZ01TABLE
       PrimaryKey:
         Name: id
         Type: String
   CreateQuestionFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: exam_api/
+      CodeUri: quiz01_api/
       Handler: create.lambda_handler
       Events:
         CreateQuestions:
           Type: Api
           Properties:
-            Path: /exam01
+            Path: /quiz01
             Method: POST
-            RestApiId: !Ref ExamAPI
+            RestApiId: !Ref Quiz01API
             #Auth:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !Ref Exam01Table
+            TableName: !Ref Quiz01Table
   SearchQuestionByIdFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: exam_api/
+      CodeUri: quiz01_api/
       Handler: searchById.lambda_handler
       Events:
         SearchByIdQuestions:
           Type: Api
           Properties:
-            Path: /exam01/{id}
+            Path: /quiz01/{id}
             Method: GET
-            RestApiId: !Ref ExamAPI
+            RestApiId: !Ref Quiz01API
             #Auth:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref Exam01Table
+            TableName: !Ref Quiz01Table
   SearchQuestionByTextFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: exam_api/
+      CodeUri: quiz01_api/
       Handler: searchByText.lambda_handler
       Events:
         SearchByTextQuestions:
           Type: Api
-          Properties:            
-            Path: /exam01/search
+          Properties:
+            Path: /quiz01/search
             Method: POST
-            RestApiId: !Ref ExamAPI
+            RestApiId: !Ref Quiz01API
             #Auth:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref Exam01Table
+            TableName: !Ref Quiz01Table
   SearchQuestionByTextV2Function:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: exam_api/
+      CodeUri: quiz01_api/
       Handler: searchByText_v2.lambda_handler
       Events:
         SearchByTextQuestions:
           Type: Api
           Properties:
-            Path: /exam01/search/v2
+            Path: /quiz01/search/v2
             Method: POST
-            RestApiId: !Ref ExamAPI
+            RestApiId: !Ref Quiz01API
             #Auth:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref Exam01Table
-  ExamAPI:
+            TableName: !Ref Quiz01Table
+  Quiz01API:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
@@ -96,12 +101,11 @@ Resources:
         ApiKeyRequired: true # sets for all methods
 Outputs:
   CreateQuestionAPI:
-    Description: "API Gateway endpoint url for creating exam01 items"
-    Value: !Sub "https://${ExamAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/exam01"
+    Description: "API Gateway endpoint url for creating items"
+    Value: !Sub "https://${Quiz01API}.execute-api.${AWS::Region}.amazonaws.com/Prod/${WEB_PATH}"
   CreateQuestionFunction:
     Description: "Create Question function ARN"
     Value: !GetAtt CreateQuestionFunction.Arn
   CreateQuestionFunctionIamRole:
     Description: "Create Question function IAM Role ARN"
     Value: !GetAtt CreateQuestionFunctionRole.Arn
-  
