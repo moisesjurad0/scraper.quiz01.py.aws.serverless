@@ -1,4 +1,4 @@
-# quiz01-scrapper.aws.serverless (SAM) :thumbsup
+# quiz01-scrapper.(AWS Serverless - SAM)
 
 :thumbsup:
 
