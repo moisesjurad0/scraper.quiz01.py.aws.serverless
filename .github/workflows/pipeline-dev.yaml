@@ -3,7 +3,7 @@ name: Pipeline
 on: 
   push:
   pull_request:
-    branches:
+    branches-ignore: # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-excluding-branches
       - main
       - master
 
