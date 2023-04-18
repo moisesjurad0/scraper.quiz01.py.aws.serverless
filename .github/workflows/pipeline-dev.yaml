@@ -1,4 +1,4 @@
-name: Pipeline
+name: Other Branches Pipeline 
 
 on: 
   push:
