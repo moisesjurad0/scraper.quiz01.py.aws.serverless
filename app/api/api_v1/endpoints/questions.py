@@ -1,13 +1,10 @@
 from fastapi import APIRouter
-from typing import List, Optional
+from typing import Optional  # , List
 import logging
 import os
 import boto3
 from typing import Union
-import json
-# import simplejson as sjson
-from typing import Union
-from pydantic import BaseModel, Field, PositiveInt
+from pydantic import BaseModel  # , PositiveInt, Field
 from boto3.dynamodb.conditions import Key, Attr
 # from boto3.dynamodb.conditions import Key, logical_and
 from enum import Enum
@@ -26,14 +23,6 @@ class QuestionType(str, Enum):
     RADIO = 'RADIO'
     RADIO_BOOL = 'RADIO_BOOL'
 
-# class Question(BaseModel):
-#     id: str = '¿De que colores es un Arco Iris?'
-#     exam_number: int = 1 #''#
-#     question_type: str = 'CHECK'  # CHANGE THIS TO QuestionType, set default to CHECK
-#     answer_text: str = 'Celeste' #''#
-#     is_correct: bool # Union[bool, None] = None
-#     last_modified: str = '2023-09-214T13:41:38.446131' #''#
-
 
 class Question(BaseModel):
     id: str
@@ -43,22 +32,6 @@ class Question(BaseModel):
     is_correct: bool
     last_modified: str
 
-
-# class QuestionQuery(BaseModel):
-#     id: Optional[str] = None
-#     exam_number: Optional[int] = None  # Optional[PositiveInt]
-#     question_type: Optional[str] = None
-#     answer_text: Optional[str] = None
-#     is_correct: Union[bool, None] = None
-#     last_modified: Optional[str] = None
-
-# class QuestionQuery(BaseModel):
-#     id: str = None
-#     exam_number: Optional[int] = None  # Optional[PositiveInt]
-#     question_type: str = None
-#     answer_text: str = None
-#     is_correct: Union[bool, None] = None
-#     last_modified: str = None
 
 class QuestionQuery(BaseModel):
     id: Optional[str] = None
