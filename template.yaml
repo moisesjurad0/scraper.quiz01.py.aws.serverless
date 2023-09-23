@@ -19,12 +19,31 @@ Globals:
         MY_STAGE: Prod
 Resources:
   Quiz01Table:
-    Type: AWS::Serverless::SimpleTable
+    Type: AWS::DynamoDB::Table
     Properties:
-      #TableName: QUIZ01TABLE
-      PrimaryKey:
-        Name: id
-        Type: String
+      TableName: Questions
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: answer_text
+          KeyType: RANGE
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: answer_text
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 5
+
+  # Quiz01Table:
+  #   Type: AWS::Serverless::SimpleTable
+  #   Properties:
+  #     #TableName: QUIZ01TABLE
+  #     PrimaryKey:
+  #       Name: id
+  #       # Name: question_text
+  #       Type: String
   Quiz01FastAPILambdaFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -47,8 +66,8 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      Auth:
-        ApiKeyRequired: true # sets for all methods
+      # Auth:
+      #   ApiKeyRequired: true # sets for all methods
 Outputs:
   CreateQuestionAPI:
     Description: "API Gateway endpoint url for creating items"
