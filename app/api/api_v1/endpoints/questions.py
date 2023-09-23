@@ -95,42 +95,48 @@ def create_item(item: Question):
 
 @router.post("/search/contains")
 def search_items(question: Question):
-    
+
     table = dynamodb.Table(table_name)
     filter_conditions = []
 
     if question:
-        for i_prop_name, i_prop_value in question.dict().items():            
+        for i_prop_name, i_prop_value in question.dict().items():
             if i_prop_value is not None:
+                
+                logger.info(f'i:{i_prop_name}=>{i_prop_value}')
+                
                 if i_prop_name == 'id':
-                    logger.info(f'm01.field.id')
-                    logger.info(f'm01.field.i_prop_name=>{i_prop_name}|m01.field.i_prop_value=>{i_prop_value}')
+                    
                     filter_conditions.append(Key(i_prop_name).begins_with(i_prop_value))
+                    
                 elif i_prop_name == 'answers':
-                    logger.info(f'm01.field.answers')
-                #     for j_answer in i_prop_value:
-                #         answer_conditions = []
-                #         if j_answer.is_correct is not None:
-                #             answer_conditions.append(Attr('is_correct').eq(j_answer.is_correct))
-                #         if j_answer.answer_text is not None:
-                #             answer_conditions.append(Attr('answer_text').eq(j_answer.answer_text))
+                                        
+                    for j_answer in i_prop_value: # iterate all answers 1 by 1
                         
-                #         # Add a condition for this answer_text using OR operator
-                #         filter_conditions.append(Attr('answers').contains(Attr().or_(*answer_conditions)))
+                        logger.info(f'j:{j_answer}')
+                        for k_prop_name, k_prop_value in j_answer.items(): # iterate all props in 1 answer
+                            
+                            if k_prop_value is not None:
+                                
+                                logger.info(f'k:{k_prop_name}=>{k_prop_value}')
+
+                                # if k_prop_name == 'is_correct':
+                                #     filter_conditions.append(Attr(f'{i_prop_name}.{k_prop_name}').eq(k_prop_value))
+                                # else :
+                                #     filter_conditions.append(Attr(f'{i_prop_name}.{k_prop_name}').begins_with(k_prop_value))
+                                    
                 elif i_prop_name == 'question_type':
-                    logger.info(f'm01.field.question_type')
+
                     filter_conditions.append(Attr(i_prop_name).eq(i_prop_value))
                 else:
-                    #filter_conditions.append(Key(i_prop_name).eq(i_prop_value))
-                    #filter_conditions.append(Key(i_prop_name).begins_with(i_prop_value))
-                    logger.info(f'm01.field.else')
-                    logger.info(f'm01.field.i_prop_name=>{i_prop_name}|m01.field.i_prop_value=>{i_prop_value}')
+
                     filter_conditions.append(Attr(i_prop_name).begins_with(i_prop_value))
-                    
 
     if filter_conditions:
-        response = table.scan(FilterExpression=reduce(lambda x, y: x & y, filter_conditions))
+        response = table.scan(FilterExpression=reduce(lambda x,y: x & y,filter_conditions))
     else:
         # No filters provided, retrieve all items
         response = table.scan()
+        
+    logger.info(f'm01.response=>{response}')
     return response
