@@ -1,8 +1,12 @@
 version = 0.1
+[default]
+[default.deploy]
 [default.deploy.parameters]
 stack_name = "quiz01-scraper-stk2"
-resolve_s3 = true
+s3_bucket = "bucket-aws-sam-mfiuepsje4t"
 s3_prefix = "quiz01-scraper-stk2"
 region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 image_repositories = []
+resolve_s3 = true
+confirm_changeset = true

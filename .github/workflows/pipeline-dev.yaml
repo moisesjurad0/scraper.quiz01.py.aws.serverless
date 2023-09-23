@@ -15,7 +15,7 @@ env:
   PIPELINE_USER_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   SAM_TEMPLATE: template.yaml
 
-  PROD_STACK_NAME: quiz01-scrapper-stack
+  PROD_STACK_NAME: quiz01-scraper-stk2
   PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::572867055940:role/aws-sam-cli-managed-prod-pip-PipelineExecutionRole-SXVWSZ3YOCMP
   PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::572867055940:role/aws-sam-cli-managed-prod-CloudFormationExecutionR-1JJJCTP0WZZ9V
   PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-prod-pipeline-artifactsbucket-rj245gzsyjfu

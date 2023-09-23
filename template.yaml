@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  This is a SAM template to build the ServerLess API, TABLE, LAMBDAS, CLOUDFORMATION STACK, S3 for the API quiz01-scrapper.
+  quiz01-scraper-stk2 | test stack to try fastAPI
 Globals:
   Function:
-    Runtime: python3.9
+    Runtime: python3.10
     Architectures:
       - x86_64
     Timeout: 3
@@ -12,11 +12,11 @@ Globals:
       Variables:
         API_TABLE_PYSICAL_ID: !Ref Quiz01Table
         # API_TABLE_LOGICAL_NAME: QUIZ01TABLE
-        APP_NAME: quiz01-scrapper
-        # API_LOGICAL_NAME: QUIZ01API
+        APP_NAME: quiz01-scraper
+        # API_LOGICAL_NAME: QUIZ01FASTAPI
         # FOLDER_PATH: quiz01_api
         WEB_PATH: quiz01
-
+        MY_STAGE: Prod
 Resources:
   Quiz01Table:
     Type: AWS::Serverless::SimpleTable
@@ -25,75 +25,25 @@ Resources:
       PrimaryKey:
         Name: id
         Type: String
-  CreateQuestionFunction:
+  Quiz01FastAPILambdaFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: quiz01_api/
-      Handler: create.lambda_handler
+      CodeUri: app/
+      Handler: main.handler
+      # Handler: app.main.handler
       Events:
-        CreateQuestions:
+        MyEventSource01:
           Type: Api
           Properties:
-            Path: /quiz01
-            Method: POST
-            RestApiId: !Ref Quiz01API
+            Path: /{proxy+}
+            Method: ANY
+            RestApiId: !Ref Quiz01FastAPI
             #Auth:
             #  ApiKeyRequired: true
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref Quiz01Table
-  SearchQuestionByIdFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: quiz01_api/
-      Handler: searchById.lambda_handler
-      Events:
-        SearchByIdQuestions:
-          Type: Api
-          Properties:
-            Path: /quiz01/{id}
-            Method: GET
-            RestApiId: !Ref Quiz01API
-            #Auth:
-            #  ApiKeyRequired: true
-      Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref Quiz01Table
-  SearchQuestionByTextFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: quiz01_api/
-      Handler: searchByText.lambda_handler
-      Events:
-        SearchByTextQuestions:
-          Type: Api
-          Properties:
-            Path: /quiz01/search
-            Method: POST
-            RestApiId: !Ref Quiz01API
-            #Auth:
-            #  ApiKeyRequired: true
-      Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref Quiz01Table
-  SearchQuestionByTextV2Function:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: quiz01_api/
-      Handler: searchByText_v2.lambda_handler
-      Events:
-        SearchByTextQuestions:
-          Type: Api
-          Properties:
-            Path: /quiz01/search/v2
-            Method: POST
-            RestApiId: !Ref Quiz01API
-            #Auth:
-            #  ApiKeyRequired: true
-      Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref Quiz01Table
-  Quiz01API:
+  Quiz01FastAPI:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
@@ -102,10 +52,10 @@ Resources:
 Outputs:
   CreateQuestionAPI:
     Description: "API Gateway endpoint url for creating items"
-    Value: !Sub "https://${Quiz01API}.execute-api.${AWS::Region}.amazonaws.com/Prod/quiz01"
-  CreateQuestionFunction:
-    Description: "Create Question function ARN"
-    Value: !GetAtt CreateQuestionFunction.Arn
-  CreateQuestionFunctionIamRole:
-    Description: "Create Question function IAM Role ARN"
-    Value: !GetAtt CreateQuestionFunctionRole.Arn
+    Value: !Sub "https://${Quiz01FastAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  Quiz01FastAPILambdaFunction:
+    Description: "Quiz01 FastAPI Lambda Function ARN"
+    Value: !GetAtt Quiz01FastAPILambdaFunction.Arn
+  Quiz01FastAPILambdaFunctionIamRole:
+    Description: "Quiz01 FastAPI Lambda Function IAM Role ARN"
+    Value: !GetAtt Quiz01FastAPILambdaFunctionRole.Arn

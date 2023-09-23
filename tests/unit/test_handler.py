@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from quiz01_api import app
+from app import app
 
 
 @pytest.fixture()
