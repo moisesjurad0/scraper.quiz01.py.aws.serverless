@@ -43,12 +43,30 @@ class QuestionQuery(BaseModel):
 
 
 @router.get("/")
-async def root():
-    return {"message": "Get Questions!"}
+# async def root():
+def get_items():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
+    table = dynamodb.Table(table_name)
+    response = table.scan()
+    logger.info('response=>%s', response)
+    return response
 
 
 @router.get("/{id}/{answer_text}")
 def read_item(id: str, answer_text: str):
+    """_summary_
+
+    Args:
+        id (str): _description_
+        answer_text (str): _description_
+
+    Returns:
+        _type_: _description_
+    """
     table = dynamodb.Table(table_name)
     # response = table.query(KeyConditionExpression=Key('id').eq(id))
     # response = table.query(Key={'id': id,'answer_text': answer_text})
@@ -71,6 +89,15 @@ def read_item(id: str, answer_text: str):
 
 @router.delete("/{id}/{answer_text}")
 def delete_item(id: str, answer_text: str):
+    """_summary_
+
+    Args:
+        id (str): _description_
+        answer_text (str): _description_
+
+    Returns:
+        _type_: _description_
+    """
     table = dynamodb.Table(table_name)
     # response = table.query(KeyConditionExpression=Key('id').eq(id))
     response = table.delete_item(Key={'id': id, 'answer_text': answer_text})
@@ -85,6 +112,14 @@ def delete_item(id: str, answer_text: str):
 
 @router.put("/")
 def put_item(item: Question):
+    """_summary_
+
+    Args:
+        item (Question): _description_
+
+    Returns:
+        _type_: _description_
+    """
     table = dynamodb.Table(table_name)
     response = table.put_item(Item=item.dict())
     logger.info(f'response=>{response}')
@@ -98,9 +133,16 @@ def put_item(item: Question):
     return response
 
 
-@router.post("/contains")
+@router.post("/search/contains")
 def search_items(question: QuestionQuery):
+    """_summary_
 
+    Args:
+        question (QuestionQuery): _description_
+
+    Returns:
+        _type_: _description_
+    """
     table = dynamodb.Table(table_name)
     filter_conditions = []
 
@@ -131,3 +173,23 @@ def search_items(question: QuestionQuery):
 
     logger.info(f'm01.response=>{response}')
     return response
+
+
+@router.put("/batch")
+def batch_update_items(items: list[Question]):
+    """Updates multiple questions in DynamoDB using a batch write item request.
+
+    Args:
+        items: A list of Question objects.
+
+    Returns:
+        None.
+    """
+    table = dynamodb.Table(table_name)
+
+    with table.batch_writer() as batch_writer:
+        for i in items:
+            batch_writer.put_item(Item=i.dict())
+
+    logger.info("Items updated successfully")
+    return {"message": "Items updated successfully"}

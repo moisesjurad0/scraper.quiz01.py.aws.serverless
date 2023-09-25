@@ -30,38 +30,26 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-async def root():
-    return {"message`": "Hello World!"}
+# @app.get("/")
+# async def root():
+#     return {"message`": "Hello World!"}
 
 
-@app.get("/url")
-async def root2(request: Request):
-    url = request.url
-    print(f"url: {url}")
-    logging.info(f"La URL completa es: {url}")
-    return url
+# @app.get("/url")
+# async def url(request: Request):
+#     url = request.url
+#     print(f"url: {url}")
+#     logging.info(f"La URL completa es: {url}")
+#     return url
 
 
-# @app.get("/test1")
-@app.get("/test")
-# @app.get("/ok1")
 @app.get("/ok")
-async def try1():
+@app.get("/test")
+async def test_ok():
     ok = 'ok'
     print(ok)
     logging.info(ok)
     return ok
-
-
-# @app.get("/test2")
-# @app.get("/ok2")
-# def try2():
-#     ok = 'ok2'
-#     print(ok)
-#     logging.info(ok)
-#     return ok
-
 
 app.include_router(api_router, prefix="/api/v1")
 
