@@ -33,7 +33,7 @@ class QuestionModel(BaseModel):
     last_modified: str
 
 
-class QuestionSearchBeginsWithModel(BaseModel):
+class QuestionScanModel(BaseModel):
     id: Optional[str] = None
     exam_number: Optional[int] = None  # Optional[PositiveInt]
     question_type: Optional[str] = None
@@ -42,7 +42,7 @@ class QuestionSearchBeginsWithModel(BaseModel):
     last_modified: Optional[str] = None
 
 
-class QuestionSearchQueryModel(BaseModel):
+class QuestionQueryModel(BaseModel):
     id: str
     exam_number: Optional[int] = None  # Optional[PositiveInt]
     question_type: Optional[str] = None
@@ -142,8 +142,28 @@ def put_item(item: QuestionModel):
     return response
 
 
+@router.put("/batch")
+def batch_put_items(items: list[QuestionModel]):
+    """Updates multiple questions in DynamoDB using a batch write item request.
+
+    Args:
+        items: A list of Question objects.
+
+    Returns:
+        None.
+    """
+    table = dynamodb.Table(table_name)
+
+    with table.batch_writer() as batch_writer:
+        for i in items:
+            batch_writer.put_item(Item=i.dict())
+
+    logger.info("Items updated successfully")
+    return {"message": "Items updated successfully"}
+
+
 @router.post("/search/begins_with")
-def search_items_begins_with(item: QuestionSearchBeginsWithModel):
+def search_items_begins_with(item: QuestionScanModel):
     """_summary_
 
     Args:
@@ -184,28 +204,8 @@ def search_items_begins_with(item: QuestionSearchBeginsWithModel):
     return response
 
 
-@router.put("/batch")
-def batch_update_items(items: list[QuestionModel]):
-    """Updates multiple questions in DynamoDB using a batch write item request.
-
-    Args:
-        items: A list of Question objects.
-
-    Returns:
-        None.
-    """
-    table = dynamodb.Table(table_name)
-
-    with table.batch_writer() as batch_writer:
-        for i in items:
-            batch_writer.put_item(Item=i.dict())
-
-    logger.info("Items updated successfully")
-    return {"message": "Items updated successfully"}
-
-
 @router.post("/search/query_eq")
-def search_items_query_eq(item: QuestionSearchQueryModel):
+def search_items_query_eq(item: QuestionQueryModel):
     """_summary_
 
     Args:
@@ -215,7 +215,8 @@ def search_items_query_eq(item: QuestionSearchQueryModel):
         _type_: _description_
     """
     table = dynamodb.Table(table_name)
-    filter_conditions = []
+    KeyConditionExpressions=[]
+    FilterExpressions = []    
 
     if item:
 
@@ -226,24 +227,25 @@ def search_items_query_eq(item: QuestionSearchQueryModel):
                 logger.info(f'i:{i_prop_name}=>{i_prop_value}')
 
                 if i_prop_name in {'id', 'answer_text'}:  # KEY begins_with
-                    filter_conditions.append(
+                    KeyConditionExpressions.append(
                         Key(i_prop_name).eq(i_prop_value))
                 # elif i_prop_name in {'question_type', 'is_correct', 'exam_number'}:  # ATTR eq
                 #     filter_conditions.append(
                 #         Attr(i_prop_name).eq(i_prop_value))
                 else:  # ATTR else
-                    filter_conditions.append(
+                    FilterExpressions.append(
                         Attr(i_prop_name).eq(i_prop_value))
 
     response = table.query(
-        FilterExpression=reduce(lambda x, y: x & y, filter_conditions))
+        KeyConditionExpression=reduce(lambda x, y: x & y, KeyConditionExpressions),
+        FilterExpression=reduce(lambda x, y: x & y, FilterExpressions))
 
     logger.info(f'm01.response=>{response}')
     return response
 
 
 @router.post("/search/contains")
-def search_items_contains(item: QuestionSearchBeginsWithModel):
+def search_items_contains(item: QuestionScanModel):
     """_summary_
 
     Args:
@@ -265,7 +267,7 @@ def search_items_contains(item: QuestionSearchBeginsWithModel):
 
                 if i_prop_name in {'id', 'answer_text'}:  # KEY begins_with
                     filter_conditions.append(
-                        Key(i_prop_name).contains(i_prop_value))
+                        Key(i_prop_name).begins_with(i_prop_value))
                 elif i_prop_name in {'question_type', 'is_correct', 'exam_number'}:  # ATTR eq
                     filter_conditions.append(
                         Attr(i_prop_name).eq(i_prop_value))
