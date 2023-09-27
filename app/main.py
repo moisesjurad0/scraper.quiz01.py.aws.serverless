@@ -20,8 +20,38 @@ logger.info(f'm01.SERVERLESS_STAGE=>{root_path}')
 root_path = os.getenv('MY_STAGE', default='')
 logger.info(f'm01.MY_STAGE=>{root_path}')
 
+description = """
+QuestionsAPI helps you do operations with the scraped data. 🚀
 
-app = FastAPI(root_path=f'/{root_path}')
+## Questions
+
+You will be able to:
+
+* **Put questions** (Create & Update & batch).
+* **Read questions**.
+* **Search questions**.
+"""
+
+app = FastAPI(
+    title="QuestionsAPI",
+    description=description,
+    summary="do a CRUD of Questions/Answers.",
+    version="0.0.1",
+    # terms_of_service="http://example.com/terms/",
+    contact={
+        "name": "moisesjurad0",
+        "url": "https://linktr.ee/moisesjurad0",
+        # "email": "moises003@outlook.com",
+    },
+    # license_info={
+    #     "name": "Apache 2.0",
+    #     "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+    # },
+    root_path=f'/{root_path}'
+)
+
+
+# app = FastAPI(root_path=f'/{root_path}')
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
