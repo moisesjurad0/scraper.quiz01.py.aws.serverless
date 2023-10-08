@@ -1,4 +1,4 @@
-# quiz01-scraper (AWS Serverless - SAM)
+# scraper.quiz01.Questions-API (AWS Serverless - SAM)
 
 :thumbsup:
 

@@ -33,7 +33,7 @@ You will be able to:
 """
 
 app = FastAPI(
-    title="QuestionsAPI",
+    title="scraper.quiz01.Questions-API",
     description=description,
     summary="do a CRUD of Questions/Answers.",
     version="0.0.1",
